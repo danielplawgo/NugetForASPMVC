@@ -300,3 +300,4 @@ NET/sales-i.net/sales-i.web/views/
 
 !.nuget/*.*
 !ng-sales-i/local_modules/ngx-charts/release/
+/demo/NugetForAspMvc/packages
