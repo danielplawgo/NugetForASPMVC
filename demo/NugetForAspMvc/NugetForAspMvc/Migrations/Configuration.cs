@@ -3,6 +3,7 @@ using NugetForAspMvc.Models;
 
 namespace NugetForAspMvc.Migrations
 {
+    using Bogus;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -24,13 +25,25 @@ namespace NugetForAspMvc.Migrations
 
             if (context.Users.Any() == false)
             {
-                var users = Builder<User>.CreateListOfSize(20)
-                    .All()
-                    .With(u => u.Email = Faker.Internet.Email())
-                    .With(u => u.FirstName = Faker.Name.First())
-                    .With(u => u.LastName = Faker.Name.Last())
-                    .With(u => u.UserName = Faker.Internet.UserName())
-                    .Build();
+                #region NBuilder and Faker
+
+                //var users = Builder<User>.CreateListOfSize(20)
+                //    .All()
+                //    .With(u => u.Email = Faker.Internet.Email())
+                //    .With(u => u.FirstName = Faker.Name.First())
+                //    .With(u => u.LastName = Faker.Name.Last())
+                //    .With(u => u.UserName = Faker.Internet.UserName())
+                //    .Build();
+
+                #endregion
+
+
+                var users = new Faker<User>()
+                    .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName())
+                    .RuleFor(u => u.LastName, (f, u) => f.Name.LastName())
+                    .RuleFor(u => u.Email, (f, u) => f.Internet.Email(u.FirstName, u.LastName))
+                    .RuleFor(u => u.UserName, (f, u) => f.Internet.UserName(u.FirstName, u.LastName))
+                    .Generate(20);
 
                 foreach (var user in users)
                 {
