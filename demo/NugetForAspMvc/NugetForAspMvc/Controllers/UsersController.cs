@@ -38,40 +38,43 @@ namespace NugetForAspMvc.Controllers
 
         public virtual ActionResult Index2()
         {
-            var profiler = MiniProfiler.Current;
-            IEnumerable<UserViewModel> viewModels;
-            var models = db.Users.ToList();
-
-            using (profiler.Step("Mapping with automapper"))
+            using (MiniProfiler.Current.Step("Index2 action"))
             {
-                viewModels = Mapper.Map<List<UserViewModel>>(models);
-            }
+                IEnumerable<UserViewModel> viewModels;
+                var models = db.Users.ToList();
 
-            return View(viewModels);
+                using (MiniProfiler.Current.Step("Mapping with automapper"))
+                {
+                    viewModels = Mapper.Map<List<UserViewModel>>(models);
+                }
+
+                return View(viewModels);
+            }
         }
 
         public virtual ActionResult Index3()
         {
-            var profiler = MiniProfiler.Current;
-
-            IEnumerable<UserViewModel> viewModels;
-            var models = db.Users.ToList();
-
-            using (profiler.Step("Mapping without automapper"))
+            using (MiniProfiler.Current.Step("Index3 action"))
             {
-                viewModels = models.Select(u => new UserViewModel()
-                {
-                    Id = u.Id,
-                    Email = u.Email,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    CreateInvoice = u.CreateInvoice,
-                    UserName = u.UserName,
-                    Nip = u.Nip
-                }).ToList();
-            }
+                IEnumerable<UserViewModel> viewModels;
+                var models = db.Users.ToList();
 
-            return View(Views.Index2, viewModels);
+                using (MiniProfiler.Current.Step("Mapping without automapper"))
+                {
+                    viewModels = models.Select(u => new UserViewModel()
+                    {
+                        Id = u.Id,
+                        Email = u.Email,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        CreateInvoice = u.CreateInvoice,
+                        UserName = u.UserName,
+                        Nip = u.Nip
+                    }).ToList();
+                }
+
+                return View(Views.Index2, viewModels);
+            }
         }
 
         // GET: Users/Details/5
